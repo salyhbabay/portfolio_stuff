@@ -598,6 +598,15 @@ footer .copyr { grid-column: 1 / -1; border-top: 1.2px solid var(--line); paddin
     return '<div class="collage slide ' + (game ? 'port' : 'land') + (one ? ' single' : '') + '" aria-roledescription="carousel" aria-label="' + p.title + ' screenshots">' + (one ? '' : '<button class="cg-btn prev" type="button" aria-label="Previous screenshot">' + arrow(-1) + '</button>') + '<div class="gs-stage" tabindex="0">' + items + '</div>' + (one ? '' : '<button class="cg-btn next" type="button" aria-label="Next screenshot">' + arrow(1) + '</button><div class="gs-dots">' + dots + '</div>') + (p.galleryTitle ? '<p class="cg-cap">' + p.galleryTitle + '</p>' : '') + '</div>';
   }
   function initLightbox() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('.yt-play');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      e.preventDefault();
+      var m = /[?&]v=([\w-]+)/.exec(a.href), f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0';
+      f.title = a.getAttribute('aria-label'); f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.setAttribute('allowfullscreen', ''); f.referrerPolicy = 'strict-origin-when-cross-origin';
+      a.parentNode.replaceChild(f, a);
+    });
     var lb = document.createElement('div'); lb.className = 'lb'; lb.hidden = true; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', 'Photo viewer');
     lb.innerHTML = '<img alt=""><button type="button" class="x" aria-label="Close">×</button><button type="button" class="p" aria-label="Previous photo">‹</button><button type="button" class="n" aria-label="Next photo">›</button>';
     document.body.appendChild(lb);
