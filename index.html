@@ -751,19 +751,19 @@ footer .copyr { grid-column: 1 / -1; border-top: 1.2px solid var(--line); paddin
   var MENU = {
     games: { label: 'Games', c: '#ffc82a',
       items: [['Mine Keeper', 'Idle arcade, my second major game', 'game', '#mine-keeper'], ['Robot Wars', 'First major game, with Freeplay Inc', 'robot', '#robot-wars'], ['Dragon Merge', 'Soft launch with Moonee and MondayOFF', 'layers', '#dragon-merge'], ['Zombie Attack', 'Third release with YSO Corp', 'bolt', '#zombie-attack']],
-      feature: { href: '#mine-keeper', tint: '#ffc82a', tags: ['Game designer', 'Idle arcade'], text: 'Mine Keeper, an idle arcade game I designed in a team of 5' },
+      feature: { href: '#mine-keeper', proj: 'mine-keeper', tint: '#ffc82a', tags: ['Game designer', 'Idle arcade'], text: 'Mine Keeper, an idle arcade game I designed in a team of 5' },
       promo: { tag: 'Publishers', title: '6 games with 5 publishers', text: 'MondayOFF, YSO Corp, Sunday.gg, Freeplay Inc and Moonee.', href: '#work' } },
     content: { label: 'Content &amp; PM', c: '#f59ad9',
       items: [['Eser.agency', 'Project manager at a creative studio', 'building', '#eser-agency'], ['Birlik', 'TikTok content and a competition pitch deck', 'deck', '#birlik'], ['University studio', 'Client communication and architects', 'people', '#university-studio'], ["Cat's Rage trailer", 'Steam trailer for a Turkmen indie studio', 'film', '#cats-rage-trailer']],
-      feature: { href: '#birlik', tint: '#f59ad9', tags: ['Content Manager', 'Startup'], text: 'Birlik: TikTok content and a pitch deck for a B2B ordering platform' },
+      feature: { href: '#birlik', proj: 'birlik', tint: '#f59ad9', tags: ['Content Manager', 'Startup'], text: 'Birlik: TikTok content and a pitch deck for a B2B ordering platform' },
       promo: { tag: 'Creative team', title: '7 graphic designers, one team', text: 'Managed from business meetings to delivery, with scope and deadlines on track.', href: '#experience' } },
     experience: { label: 'Experience', c: '#ff7a45',
       items: [['Content &amp; Project Manager', 'Startup, 2025–2026', 'megaphone', '#experience'], ['Head of IT Department', 'Dana Education Centre, 2024–2025', 'briefcase', '#experience'], ['Game Designer', 'Onki Games, 2022–2024', 'game', '#experience'], ['Freelance', 'Russian indie devs and a Steam trailer', 'file', '#work']],
-      feature: { href: '#experience', tint: '#ff7a45', tags: ['Dana Education Centre', 'Head of IT'], text: 'Led IT for a team of 14 across 13 branches of the largest education center in Turkmenistan' },
+      feature: { href: '#experience', photo: true, tint: '#ff7a45', tags: ['Dana Education Centre', 'Head of IT'], text: 'Led IT for a team of 14 across 13 branches of the largest education center in Turkmenistan' },
       promo: { tag: 'Automation', title: '7,000+ students', text: 'Certification and exam sheet generation, automated every 3 months.', href: '#experience' } },
     skills: { label: 'Skills', c: '#3ccf91',
       items: [['Professional', 'Game design, monetization, GDDs, Scrum', 'star', '#skills'], ['Technical', 'Unity, Jira, Notion, Figma, Premiere Pro', 'code', '#skills'], ['AI tools', 'Higgsfield, Claude, Nano Banana', 'sparkle', '#skills'], ['Languages', 'English, Russian, Turkmen, Turkish', 'globe', '#skills']],
-      feature: { href: '#experience', tint: '#3ccf91', tags: ['Unity', 'Hyper-casual'], text: 'Two hyper-casual games built in Unity, with CPI of $0.75 and $1' },
+      feature: { href: '#experience', proj: 'zombie-attack', tint: '#3ccf91', tags: ['Unity', 'Hyper-casual'], text: 'Two hyper-casual games built in Unity, with CPI of $0.75 and $1' },
       promo: { tag: 'Languages', title: 'Four languages', text: 'English C1, Russian C1, Turkmen and Turkish native.', href: '#skills' } },
     contact: { label: 'Contact', c: '#6bb6ff',
       items: [['Email', 'salammonkey@gmail.com', 'mail', '#contact'], ['Location', 'Ashgabat, Turkmenistan', 'pin', '#contact'], ['Roles', 'Game designer and project manager', 'briefcase', '#contact'], ['Instagram', '@eser.agency', 'people', 'https://www.instagram.com/eser.agency']],
@@ -774,12 +774,17 @@ footer .copyr { grid-column: 1 / -1; border-top: 1.2px solid var(--line); paddin
   var mega = $('mega'), scrim = $('scrim'), burger = $('burger'), openKey = null;
   var photoSrc = document.querySelector('.portrait').getAttribute('src');
   function aAttrs(h) { return /^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''; }
+  function featImg(id) {
+    var q = P.filter(function (x) { return x.id === id; })[0], src = '';
+    if (q && q.imgs) q.imgs.some(function (u) { if (u) { src = u; return true; } });
+    return src ? '<img src="' + src + '" alt="">' : '';
+  }
   function menuHtml(key) {
     var m = MENU[key];
     var tabs = '<div class="m-tabs" role="group" aria-label="Categories">' + ORDER.map(function (k) { return '<button class="navbtn" type="button" data-menu="' + k + '" style="--c:' + MENU[k].c + '" aria-expanded="' + (k === key) + '"><i class="dot"></i>' + MENU[k].label + '</button>'; }).join('') + '</div>';
     var list = '<div class="m-list">' + m.items.map(function (it) { return '<a class="m-item" href="' + it[3] + '"' + aAttrs(it[3]) + '><span class="m-ico">' + ico(it[2]) + '</span><span><h3>' + it[0] + '</h3><p>' + it[1] + '</p></span></a>'; }).join('') + '</div>';
     var f = m.feature;
-    var feat = '<a class="m-feature" href="' + f.href + '" style="--tint:' + f.tint + '">' + (f.photo ? '<img src="' + photoSrc + '" alt="">' : '') + '<div class="tags">' + f.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div><h3>' + f.text + '</h3></a>';
+    var feat = '<a class="m-feature" href="' + f.href + '" style="--tint:' + f.tint + '">' + (f.photo ? '<img src="' + photoSrc + '" alt="">' : (f.proj ? featImg(f.proj) : '')) + '<div class="tags">' + f.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div><h3>' + f.text + '</h3></a>';
     var pr = m.promo;
     var promo = '<a class="m-promo" href="' + pr.href + '"><span class="tag">' + pr.tag + '</span><h3>' + pr.title + '</h3><p>' + pr.text + '</p></a>';
     return tabs + list + feat + promo;
