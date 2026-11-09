@@ -604,6 +604,13 @@ footer .copyr { grid-column: 1 / -1; border-top: 1.2px solid var(--line); paddin
     var one = p.shots.length < 2;
     return '<div class="collage slide ' + (game ? 'port' : 'land') + (one ? ' single' : '') + '" aria-roledescription="carousel" aria-label="' + p.title + ' screenshots">' + (one ? '' : '<button class="cg-btn prev" type="button" aria-label="Previous screenshot">' + arrow(-1) + '</button>') + '<div class="gs-stage" tabindex="0">' + items + '</div>' + (one ? '' : '<button class="cg-btn next" type="button" aria-label="Next screenshot">' + arrow(1) + '</button><div class="gs-dots">' + dots + '</div>') + (p.galleryTitle ? '<p class="cg-cap">' + p.galleryTitle + '</p>' : '') + '</div>';
   }
+  function centerIcons() {
+    document.querySelectorAll('.box-ico svg').forEach(function (svg) {
+      var pa = svg.querySelector('path'); if (!pa) return;
+      try { var bb = pa.getBBox(); if (!bb.width) return;
+        pa.setAttribute('transform', 'translate(' + (12 - (bb.x + bb.width / 2)).toFixed(2) + ' ' + (12 - (bb.y + bb.height / 2)).toFixed(2) + ')'); } catch (e) {}
+    });
+  }
   function initLightbox() {
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('.yt-play');
@@ -699,7 +706,7 @@ footer .copyr { grid-column: 1 / -1; border-top: 1.2px solid var(--line); paddin
   function renderCases() {
     var list = P.filter(function (p) { return current === 'all' || p.cat.indexOf(current) > -1; });
     $('cases').innerHTML = list.length ? list.map(caseHtml).join('') : '<p class="empty">No work in this category yet.</p>';
-    watchCases(); initCollages(); initSlides(); initLightbox();
+    watchCases(); initCollages(); initSlides(); initLightbox(); centerIcons();
   }
   function renderFilters() {
     $('filters').innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '"' + (c[2] ? ' data-c style="--c:' + c[2] + '"' : '') + ' aria-pressed="' + (c[0] === current) + '">' + c[1] + '</button>'; }).join('');
